@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carter Moseman</title>
+<meta name="description" content="Carter Moseman, a cybersecurity professional building tools for the community: HTB Study Trackers for Hack The Box certifications, Hemo OS, a Kali workstation rebuilt clean for every engagement, Hannibal, an offensive-security cockpit, and The GIAC Index, a guide to indexing open-book GIAC exams.">
+<meta name="theme-color" content="#efece4">
+<script>
+  /* apply the saved theme before first paint (Bone light is the default; Graphite is dark) */
+  try { if (localStorage.getItem("theme") === "dark") document.documentElement.dataset.theme = "dark"; } catch (e) {}
+  /* print grain: one 256px tile of random light and dark pixels at device resolution, tiled into the page
+     background only (see the "print grain" rule). Each pixel is white or black with an opacity
+     that clusters near zero, so it reads as fine paper grain rather than static. Without canvas the page simply stays flat. */
+  try {
+    const n = 256, dpr = Math.min(2, devicePixelRatio || 1), c = document.createElement("canvas");
+    c.width = c.height = n;
+    const ctx = c.getContext("2d"), img = ctx.createImageData(n, n), px = new Uint32Array(img.data.buffer);
+    for (let i = 0; i < px.length; i++) {
+      const v = (Math.random() + Math.random() + Math.random()) / 3 - .5;
+      px[i] = (Math.min(255, Math.abs(v) * 180) << 24 >>> 0) | (v > 0 ? 0xffffff : 0);
+    }
+    ctx.putImageData(img, 0, 0);
+    const r = document.documentElement.style;
+    r.setProperty("--grain", `url(${c.toDataURL()})`);
+    r.setProperty("--grain-size", n / dpr + "px");
+  } catch (e) {}
+</script>
+<meta property="og:title" content="Carter Moseman">
+<meta property="og:description" content="Security projects and guides: HTB Study Trackers, Hemo OS, Hannibal, and The GIAC Index.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cnmoseman.github.io/">
+<meta property="og:image" content="https://cnmoseman.github.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Carter Moseman — cybersecurity professional">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Carter Moseman">
+<meta name="twitter:description" content="Cybersecurity professional — HTB Study Trackers, Hemo OS and Hannibal.">
+<meta name="twitter:image" content="https://cnmoseman.github.io/assets/og.png">
+<link rel="canonical" href="https://cnmoseman.github.io/">
+<link rel="icon" href="assets/favicon-cm.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Carter Moseman",
+  "url": "https://cnmoseman.github.io/",
+  "email": "contact@cnm-tx.com",
+  "jobTitle": "Cybersecurity professional",
+  "description": "A cybersecurity professional working toward a degree in cybersecurity and new certifications, building security tools for the community.",
+  "knowsAbout": ["Penetration testing", "Red teaming", "Offensive security", "Kali Linux", "Hack The Box"],
+  "sameAs": [
+    "https://github.com/cnmoseman",
+    "https://www.linkedin.com/in/cartermoseman"
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Science+Gothic:wdth,wght@125..150,600..700&family=Atkinson+Hyperlegible+Next:wght@400;700&family=Averia+Serif+Libre:wght@400;700&family=Chakra+Petch:wght@400;700&family=Cinzel:wght@600;700&family=IBM+Plex+Mono:wght@600&family=Spectral:ital,wght@0,400;0,700;0,800;1,500&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Personal portfolio. Layout: a profile column (name, intro, links) pinned on the left, projects stacked on the
+   right; a new project is one more card. Type: Science Gothic (a revival of Bank Gothic) set wide for names, headings
+   and labels; Atkinson Hyperlegible Next for running text.
+   Colors: Bone paper by default, Graphite in dark mode; each project card keeps its own brand color.
+   Texture: print grain on the page background only; text, the cert band and the cards stay clean. */
+:root{
+  --bg:#efece4; --panel:#f8f6f0; --line:#d8d2c4; --text:#1b1a17; --muted:#575349; --dim:#6b665b;
+  --site:#1b1a17; --site-ink:#efece4; --shadow:rgba(60,50,30,.28);
+  --htb:#9fef00; --ink:#0d1420; --hemo:#c9a37a; --hemo-ink:#221d19; --hemo-logo:#966b4f;
+  --hann:#171615; --hann-ink:#c08a3e; --hann-logo:#8a5e22;
+  --f:"Atkinson Hyperlegible Next","Helvetica Neue",Arial,sans-serif; --d:"Science Gothic","Arial Black",sans-serif;
+  --gutter:clamp(16px,4vw,48px); --ease:cubic-bezier(.16,1,.3,1);
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg:#141413; --panel:#1d1d1b; --line:#2e2d2a; --text:#ecebe6; --muted:#a8a59d; --dim:#8f8c84;
+  --site:#e4e0d4; --site-ink:#141413; --shadow:rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scrollbar-color:var(--line) var(--bg)}
+body{margin:0;overflow-x:clip;background-color:var(--bg);color:var(--text);font-family:var(--f);-webkit-font-smoothing:antialiased;transition:background-color .25s,color .25s;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+/* print grain on the page background only; text, the cert band and the project cards stay clean */
+body{background-image:var(--grain,none);background-size:var(--grain-size,256px)}
+img{max-width:100%;display:block}
+a{color:inherit;text-underline-offset:.2em}
+::selection{background:var(--site);color:var(--site-ink)}
+:focus-visible{outline:2px solid var(--site);outline-offset:3px}
+.skip{position:absolute;left:var(--gutter);top:-60px;background:var(--site);color:var(--site-ink);padding:10px 14px;font:700 13px var(--d);font-stretch:125%;z-index:10;border-radius:4px;text-decoration:none}
+.skip:focus{top:10px}
+svg.ic{width:1.05em;height:1.05em;display:inline-block;vertical-align:-.17em;flex:none;transition:transform .25s var(--ease)}
+a:hover svg.ic.go{transform:translateX(3px)}
+/* Hemo OS wordmark: the logo's own lettering used as a mask, so it takes the surrounding text color */
+.wm{display:inline-block;height:.74em;aspect-ratio:788/152;max-width:100%;background:currentColor;
+  -webkit-mask:url(assets/hemo-wordmark.png) left bottom/contain no-repeat;mask:url(assets/hemo-wordmark.png) left bottom/contain no-repeat}
+.caps{font-family:var(--d);text-transform:uppercase;letter-spacing:.1em;font-size:12px;font-weight:600;font-stretch:125%}
+
+/* top bar */
+.page{max-width:1240px;margin:0 auto;padding:0 var(--gutter)}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:64px}
+.bar .home{display:inline-flex;align-items:center;min-height:44px;text-decoration:none}
+/* CM monogram: a chamfered tile with the initials in the site face; takes the ink/paper from the theme tokens so it inverts in dark mode */
+.cm-mark{width:34px;height:34px;display:block}
+.cm-mark .t{fill:var(--site)}
+.cm-mark .l{fill:var(--site-ink)}
+.bar nav{display:flex;align-items:center;gap:4px}
+.bar nav a,.bar nav button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:44px;padding:0 10px;color:var(--muted);text-decoration:none;border:0;background:none;font:inherit;cursor:pointer}
+.bar nav a:hover,.bar nav button:hover{color:var(--text)}
+.bar nav button svg{width:18px;height:18px}
+.bar nav button .sun{display:none}
+:root[data-theme="dark"] .bar nav button .sun{display:block}
+:root[data-theme="dark"] .bar nav button .moon{display:none}
+
+/* profile column + projects column */
+.split{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.6fr);gap:clamp(28px,5vw,72px);align-items:start}
+.profile{position:sticky;top:0;padding-block:clamp(40px,6vw,72px) 24px;display:grid;gap:22px;container-type:inline-size}
+/* the name is sized from its own column so the longer line ("MOSEMAN", 8.59em wide at 150%) always fits */
+.profile h1{margin:0;font:700 34px/.95 var(--d);font-size:min(11.45cqi,80px);font-stretch:150%;letter-spacing:0;text-transform:uppercase;white-space:nowrap}
+.profile p{margin:0;max-width:46ch;font-size:clamp(17px,1.4vw,19px);line-height:1.5;color:var(--muted)}
+.profile .links{display:flex;flex-wrap:wrap;gap:8px 20px}
+.profile .links a{display:inline-flex;align-items:center;gap:8px;min-height:40px;text-decoration:none;border-bottom:1.5px solid var(--line)}
+.profile .links a:hover{border-color:var(--text)}
+.profile .links .mail{display:inline-flex;align-items:center;gap:10px}
+.profile .links .addr{text-transform:none;letter-spacing:.04em}
+.profile .links button{min-height:40px;padding:0 4px;border:0;background:none;color:var(--dim);font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer}
+.profile .links button:hover{color:var(--text)}
+.work{padding-top:clamp(40px,6vw,72px);min-width:0}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:16px;border-top:1.5px solid var(--text);padding-top:14px;margin-bottom:22px}
+.sec-h h2{margin:0;font:700 clamp(22px,2.2vw,28px)/1.1 var(--d);font-stretch:125%;letter-spacing:-.01em}
+.sec-h span{color:var(--dim);font-variant-numeric:tabular-nums}
+.projects{display:grid;gap:18px;list-style:none;margin:0;padding:0}
+
+/* project cards: lifted off the page, each in its project's color */
+.card{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:flex-end;gap:14px;padding:clamp(24px,3vw,36px);min-height:400px;text-decoration:none;overflow:hidden;border-radius:24px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 0 0 1px color-mix(in srgb,var(--text) 10%,transparent),0 22px 44px -22px var(--shadow),0 8px 18px -12px var(--shadow)}
+.card.htb{background-color:var(--htb);color:var(--ink)}
+.card.hemo{background-color:var(--hemo);color:var(--hemo-ink)}
+.card::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(160deg,transparent 40%,rgba(0,0,0,.14));opacity:0;transition:opacity .4s var(--ease)}
+a.card:hover::after{opacity:1}
+.card:focus-visible{outline:3px solid currentColor;outline-offset:-10px}
+.card .art{position:absolute;z-index:-1;pointer-events:none;right:7%;top:6%;width:min(46%,290px);color:var(--hemo-logo)}
+/* the eight cert badges, each overlapping the previous one by half, ringed in its tracker color */
+.badges{--b:clamp(48px,6.4vw,92px);display:flex;align-self:flex-end;margin-bottom:auto;padding-left:calc(var(--b) / 2)}
+.badges img{width:var(--b);height:var(--b);border-radius:50%;background:var(--ink);margin-left:calc(var(--b) / -2);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 70%,transparent),0 0 10px color-mix(in srgb,var(--c) 35%,transparent)}
+.card .mine{display:flex;flex-wrap:wrap;gap:6px 18px;font-variant-numeric:tabular-nums}
+.card .mine[hidden]{display:none}
+.card h3{margin:0;font:700 clamp(26px,2.8vw,40px)/.92 var(--d);font-stretch:125%;letter-spacing:-.01em}
+.card p{margin:0;font-size:16px;line-height:1.5;max-width:40ch}
+.card .meta{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-top:14px;border-top:2px solid currentColor}
+.card .meta .st{display:inline-flex;align-items:center;gap:8px}
+.card .meta .st::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.card.soon .meta .st::before{background:transparent;box-shadow:inset 0 0 0 1.5px currentColor}
+/* the HTB card uses the tracker site's own type (Chakra Petch + IBM Plex Mono) so it matches where it leads */
+/* the HTB title fills the card: the text is about 8.6em wide, so 100cqi/9 leaves a small margin at every width */
+.card.htb{container-type:inline-size}
+.card.htb h3{font:700 min(72px,100cqi / 9)/.95 "Chakra Petch",var(--f);font-stretch:normal;letter-spacing:-.045em}
+/* the Hemo OS wordmark: 7.8em of the 42px-max title size (shrunk a little from 8.58em at the owner's request). The lizard
+   cap below still reserves the old 8.58em, so the lizard keeps its size and its tail gap only grows */
+.card.hemo h3{font-size:clamp(28px,3vw,42px);line-height:1}
+.card.hemo .wm{height:auto;width:7.8em}
+/* keep the lizard (its tail is its lower-left corner) clear of that wider wordmark: at most the card width left of
+   its right edge (93%), minus the padding, the wordmark (8.58 x the title size) and a 20px gap */
+.card.hemo .art{width:min(46%,290px,calc(93% - clamp(24px,3vw,36px) - 8.58 * clamp(28px,3vw,42px) - 20px))}
+.card.htb p{font-family:"Chakra Petch",var(--f);font-size:16.5px}
+/* the Hemo card uses the Hemo OS page's own body font so its copy matches where it leads */
+.card.hemo p{font-family:"Averia Serif Libre","Georgia",serif}
+/* The GIAC Index card: oxblood field, Spectral title, a section-numbered thumb edge (matches the guide page) */
+.card.giac{background-color:#7c2b2b;color:#f3ede0;font-family:"Spectral","Georgia",serif;padding-right:46px;container-type:inline-size}
+.card.giac .g-kick{position:absolute;top:clamp(24px,3vw,36px);left:clamp(24px,3vw,36px);color:#eccfcf;font-family:"JetBrains Mono",ui-monospace,monospace;font-weight:600;letter-spacing:.2em;text-transform:uppercase;font-size:11px}
+.card.giac h3{font-family:"Spectral",serif;font-weight:800;font-stretch:normal;font-size:min(72px,13cqi);letter-spacing:-.01em;line-height:.98}
+.card.giac p{font-family:"Spectral",serif;font-style:italic;color:#eccfcf;font-size:17px}
+.card.giac .caps{font-family:"JetBrains Mono",ui-monospace,monospace;font-weight:600;font-stretch:normal;letter-spacing:.08em;font-size:12px}
+.card.giac .meta{border-top-color:rgba(243,237,224,.42)}
+.card.giac .g-tabs{position:absolute;right:0;top:0;bottom:0;width:34px;background:#55201f;display:flex;flex-direction:column}
+.card.giac .g-tabs span{flex:1;display:flex;align-items:center;justify-content:center;color:#f3ede0;opacity:.56;font:600 10px/1 "JetBrains Mono",ui-monospace,monospace;letter-spacing:.02em}
+.card.htb .caps{font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:600;font-stretch:normal;letter-spacing:.08em;font-size:12px}
+/* Hannibal: the app's near-black ground and bronze accent. The card is near-black, so it gets a bronze hairline
+   (its own ink at ~34%) to stay defined against the charcoal dark-mode page. The crest is a tonal PNG (too detailed
+   to flatten to one color); the "Hannibal" wordmark is the app's own lettering, inlined so it takes the bronze ink. */
+.card.hann{background-color:var(--hann);color:var(--hann-ink);container-type:inline-size;
+  box-shadow:inset 0 1px 0 rgba(192,138,62,.18),0 0 0 1px color-mix(in srgb,var(--hann-ink) 34%,transparent),0 22px 44px -22px var(--shadow),0 8px 18px -12px var(--shadow)}
+/* Hannibal's wordmark cipher is set in Cinzel (the app's own font); sized to fill the left half so it reads as large
+   as the HTB and Hemo titles while clearing the logo on the right */
+.card.hann h3.word{font-family:"Cinzel",Georgia,serif;font-weight:700;font-stretch:normal;letter-spacing:.012em;line-height:1;color:var(--hann-ink);font-size:min(72px,18cqi)}
+/* the whole logo (crest + banner) on the right half, height-fit so the card stays the same height as the others;
+   the copy is held to the left half so the two never overlap */
+.card.hann .art{right:3%;top:43%;transform:translateY(-50%);width:auto;height:auto;max-width:33%;max-height:66%;filter:drop-shadow(0 8px 20px rgba(0,0,0,.45))}
+.card.hann p{max-width:27ch}
+.card.hann .meta{border-top-color:color-mix(in srgb,var(--hann-ink) 45%,transparent)}
+/* once the card is too narrow to fit the logo beside the title (narrow windows, the squeezed two-column width, phones),
+   the logo hides itself and the title + copy take the full width — no clash. Keyed to the card's own width, not the
+   viewport, so it triggers exactly when they'd actually overlap. */
+@container (max-width:620px){
+  .card.hann .art{display:none}
+  .card.hann p{max-width:none}
+}
+
+footer{margin-top:clamp(56px,8vw,96px);padding-block:22px 32px;border-top:1px solid var(--line);color:var(--dim);font-size:14px;line-height:1.6}
+
+/* earned certifications: a full-width band that scrolls continuously; it pauses on hover and stands still
+   (as a scrollable row) for visitors who prefer reduced motion. The second copy of the list only exists to
+   make the loop seamless, so it is hidden from screen readers. */
+.certs{margin-inline:calc(50% - 50vw);border-block:1px solid var(--line);background-color:var(--panel);overflow:hidden;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.certs .track{display:flex;width:max-content;animation:certs-scroll 46s linear infinite}
+.certs:hover .track,.certs:focus-within .track{animation-play-state:paused}
+.certs ul{display:flex;list-style:none;margin:0;padding:0}
+.certs li{position:relative}
+.certs li>a,.certs li>div{display:flex;align-items:baseline;gap:12px;padding:14px 30px;white-space:nowrap;text-decoration:none}
+.certs li>a:hover span{color:var(--text);text-decoration:underline;text-underline-offset:.25em}
+.certs li>a:focus-visible{outline-offset:-4px}
+.certs li::after{content:"";position:absolute;right:0;top:50%;width:5px;height:5px;margin-top:-2px;border-radius:50%;background:var(--line)}
+.certs li b{font:700 17px var(--d);font-stretch:150%;letter-spacing:.02em}
+.certs li span{font-size:14px;color:var(--muted)}
+@keyframes certs-scroll{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.certs{overflow-x:auto;-webkit-mask:none;mask:none}.certs .track{animation:none}.certs ul[aria-hidden]{display:none}}
+@media (max-width:900px){.split{grid-template-columns:minmax(0,1fr)}.profile{position:static;padding-bottom:0}.work{padding-top:8px}}
+@media (max-width:520px){.card{min-height:400px;border-radius:20px}}
+/* on phones the wordmark spans most of the card, so the lizard sits above the text and needs no width cap */
+@media (max-width:600px){.card.hemo .art{width:min(40%,290px)}}
+@media (max-width:440px){.bar .home{font-size:13px;letter-spacing:0;font-stretch:125%}.bar nav a,.bar nav button{padding:0 6px}}
+@media (max-width:400px){.bar nav a[href="#projects"]{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<!--
+  Hi, fellow view-source reader.
+
+  The scripts on this page do three small things: remember light or dark
+  mode, read your own HTB tracker progress from this browser (it never
+  leaves it), and count page views with GoatCounter, which sets no cookies.
+
+  Spotted something broken? Tell me at contact@cnm-tx.com.
+  - Carter
+-->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="hemo-mark" viewBox="0 0 977.000000 802.000000"><g transform="translate(0.000000,802.000000) scale(0.100000,-0.100000)" fill="currentColor" stroke="none"> <path d="M5620 8008 c0 -27 104 -196 184 -298 127 -163 388 -412 444 -423 129 -26 209 -17 317 34 56 26 195 131 195 147 0 4 -165 83 -367 176 -203 93 -459 215 -570 271 -112 57 -203 98 -203 93z M8189 7790 c-152 -18 -220 -41 -186 -61 61 -36 223 -168 277 -225 56 -60 150 -191 150 -209 0 -4 -29 10 -64 29 -423 237 -836 384 -1209 432 -113 14 -237 13 -237 -2 0 -3 32 -42 71 -87 174 -204 227 -446 136 -630 -20 -40 -45 -81 -55 -91 -19 -16 -20 -15 -36 56 -16 73 -95 246 -121 268 -12 10 -27 2 -77 -37 -86 -68 -145 -101 -241 -134 l-81 -28 -14 -68 c-76 -385 -367 -667 -857 -833 -44 -15 -78 -31 -75 -36 5 -11 195 -85 305 -118 263 -81 611 -143 962 -171 82 -7 82 -7 89 -38 3 -18 23 -76 44 -130 129 -332 355 -501 701 -524 199 -13 452 46 898 209 74 27 138 47 143 46 5 -2 -19 -26 -54 -54 -230 -182 -457 -302 -698 -367 -107 -29 -126 -31 -285 -31 -290 0 -477 70 -657 248 -98 97 -206 270 -239 382 -15 50 -16 50 -120 59 l-76 7 -7 -80 c-16 -202 -92 -378 -236 -547 l-50 -59 33 -18 c108 -55 277 -57 429 -4 l71 25 89 -85 c150 -142 370 -232 611 -249 539 -39 1537 495 2030 1086 102 124 217 314 217 360 0 43 -267 -29 -615 -166 -739 -290 -1217 -416 -1395 -366 -29 8 -14 15 265 121 164 62 549 218 865 350 69 29 168 70 220 92 283 118 489 178 609 178 50 0 51 1 51 29 0 162 -165 506 -325 680 -30 32 -76 96 -101 142 -240 433 -717 701 -1155 649z m-157 -825 c182 -38 356 -182 452 -372 31 -62 32 -62 -95 -22 l-99 32 -63 -66 c-77 -80 -140 -107 -251 -107 -163 0 -261 78 -306 244 l-17 61 -96 25 c-54 13 -97 27 -97 31 0 12 120 90 193 125 125 59 254 76 379 49z M4229 7647 c94 -116 603 -488 971 -710 253 -152 699 -387 736 -387 45 0 197 168 262 290 56 106 102 262 81 275 -4 3 -151 37 -326 76 -646 143 -1394 346 -1723 467 -13 5 -13 3 -1 -11z M4345 6508 c-27 -5 -51 -11 -53 -12 -1 -2 21 -44 50 -93 30 -50 67 -123 83 -163 l29 -72 -39 -31 c-131 -101 -221 -230 -261 -375 -21 -76 -16 -88 63 -155 102 -88 264 -137 325 -99 50 31 208 81 276 88 l60 7 7 56 c26 211 192 483 365 597 51 34 51 35 -18 72 -281 150 -652 225 -887 180z M3495 6264 c-98 -15 -295 -75 -295 -91 0 -3 38 -69 85 -148 47 -78 85 -146 85 -152 0 -5 -21 -29 -46 -53 -102 -98 -173 -240 -188 -376 l-6 -52 55 -50 c60 -56 122 -83 227 -101 l67 -11 78 53 c82 56 175 97 284 126 43 11 64 22 63 32 -1 7 -10 52 -19 98 -27 133 -8 253 63 396 30 62 115 177 145 198 29 21 18 28 -103 68 -164 53 -377 80 -495 63z M5268 5932 c-58 -63 -122 -183 -140 -264 -14 -61 -17 -58 129 -141 114 -65 228 -112 294 -122 l47 -7 12 39 c29 91 86 179 167 261 46 45 83 84 83 87 0 2 -33 14 -72 26 -98 29 -373 131 -425 157 l-41 22 -54 -58z M2548 5781 c-131 -29 -348 -113 -348 -136 0 -2 36 -56 81 -120 101 -146 97 -132 46 -192 -128 -150 -202 -416 -131 -472 39 -31 147 -61 219 -61 l62 0 84 84 c92 91 197 164 298 207 73 31 73 30 46 119 -38 127 -13 296 68 460 23 47 43 88 45 91 16 34 -339 48 -470 20z M4840 5360 c-297 -45 -551 -283 -586 -552 -7 -47 -5 -51 32 -90 108 -111 311 -147 497 -89 l67 22 0 63 c0 172 105 386 259 527 74 68 74 68 -29 98 -80 24 -168 31 -240 21z M3862 5165 c-234 -80 -402 -243 -452 -440 -27 -107 -27 -109 30 -169 121 -128 323 -153 518 -65 50 23 62 32 58 46 -54 173 -17 435 84 594 17 25 30 49 30 52 0 20 -197 6 -268 -18z M5515 5178 c-189 -42 -373 -229 -425 -434 -36 -140 -25 -160 129 -237 82 -41 87 -42 185 -42 141 0 262 44 365 133 l43 37 -56 75 c-98 130 -166 285 -181 413 -9 67 -8 66 -60 55z M1854 5035 c-255 -133 -468 -394 -535 -652 -27 -106 -22 -228 11 -248 45 -28 267 -21 275 9 52 204 214 420 383 515 13 8 12 16 -12 66 -39 83 -50 146 -43 252 4 53 3 93 -3 93 -4 0 -39 -16 -76 -35z M3140 4943 c-287 -48 -570 -328 -558 -552 3 -56 3 -56 66 -103 140 -106 340 -104 518 4 l53 31 -25 49 c-75 148 -73 346 6 516 l29 62 -32 -1 c-18 -1 -43 -4 -57 -6z M8190 4555 c-280 -114 -577 -147 -839 -96 -58 11 -107 19 -109 16 -3 -2 18 -38 47 -79 191 -277 198 -566 21 -921 -39 -77 -70 -144 -70 -148 0 -10 68 25 154 80 375 241 672 604 835 1021 36 93 57 163 49 162 -2 -1 -41 -16 -88 -35z M2183 4506 c-203 -99 -363 -323 -363 -510 0 -50 1 -52 44 -78 145 -87 319 -82 492 13 105 57 104 56 50 141 -73 114 -100 208 -100 355 -1 146 6 141 -123 79z M6605 4422 c-194 -67 -369 -301 -650 -867 -227 -458 -246 -572 -138 -830 168 -401 750 -1028 1038 -1118 54 -17 1498 -34 1523 -18 8 5 1 29 -23 80 -49 102 -152 207 -248 254 -138 67 -155 69 -543 74 l-352 5 -38 86 c-110 251 -266 481 -528 777 -19 22 -35 44 -36 49 0 5 33 45 73 90 412 457 584 817 511 1067 -77 262 -360 430 -589 351z M4789 4401 c-178 -63 -315 -205 -369 -380 -35 -112 -29 -142 35 -195 160 -130 400 -125 603 13 88 59 88 61 43 112 -85 97 -159 237 -197 371 -15 51 -29 96 -33 100 -3 3 -40 -6 -82 -21z M3990 4289 c-206 -34 -411 -229 -460 -437 -16 -69 -9 -90 43 -129 171 -128 369 -146 574 -53 72 33 71 30 39 90 -52 99 -101 292 -114 444 -8 99 -6 97 -82 85z M985 4175 c-139 -172 -295 -418 -415 -657 -61 -122 -107 -225 -103 -229 4 -4 42 -21 83 -37 76 -30 168 -80 248 -134 23 -16 46 -28 51 -26 4 2 42 44 83 93 142 169 349 350 526 460 l60 37 -23 66 c-13 37 -26 84 -30 104 l-7 37 -66 6 c-201 19 -300 114 -320 306 l-7 72 -80 -98z M5874 4051 c-293 -218 -606 -395 -847 -480 -382 -133 -821 -191 -1156 -152 -57 7 -106 10 -109 7 -3 -3 9 -36 26 -73 115 -255 89 -486 -80 -715 -54 -73 -56 -78 -35 -83 364 -79 935 -42 1452 95 185 50 435 134 435 148 0 4 -5 23 -10 42 -68 230 -15 406 322 1070 54 107 97 197 96 202 -2 4 -44 -23 -94 -61z M2420 3720 c-308 -43 -476 -155 -526 -350 -57 -226 123 -463 355 -465 72 0 80 2 146 42 114 69 224 111 334 130 55 10 103 14 107 11 3 -4 -20 -31 -52 -60 -606 -540 -861 -973 -724 -1227 43 -79 116 -139 209 -173 l66 -23 1003 -3 1003 -2 -7 22 c-46 152 -200 309 -359 367 -111 41 -140 44 -664 50 l-513 6 296 304 c393 402 457 477 498 585 111 290 -62 527 -504 690 -222 83 -488 121 -668 96z M1518 3401 c-288 -192 -509 -429 -727 -778 -66 -107 -188 -337 -230 -435 -19 -43 -36 -78 -39 -78 -3 0 -34 27 -68 60 -89 86 -229 140 -330 128 -32 -4 -39 -24 -74 -213 -134 -724 16 -1314 457 -1797 114 -125 305 -288 337 -288 3 0 -11 37 -31 82 -157 363 -242 628 -279 875 -24 161 -15 432 20 568 111 440 403 838 807 1101 101 66 307 173 374 194 81 26 81 25 31 88 -103 132 -141 253 -133 417 3 61 9 120 13 133 10 33 -1 29 -128 -57z M343 3033 c-65 -148 -193 -496 -193 -527 0 -2 26 -7 58 -11 68 -8 162 -30 216 -51 21 -8 40 -14 41 -12 2 2 37 71 78 153 42 83 101 191 132 240 l55 90 -32 27 c-57 49 -267 148 -314 148 -9 0 -26 -24 -41 -57z"/> </g></symbol>
+  <symbol id="arr" viewBox="0 0 16 16"><path d="M3 8h9.5M8.5 3.8 12.7 8l-4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="in" viewBox="0 0 16 16"><path fill="currentColor" d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"/></symbol>
+  <symbol id="mail" viewBox="0 0 16 16"><path d="M1.5 3.5h13v9h-13z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="m1.8 4 6.2 4.9L14.2 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+  <symbol id="gh" viewBox="0 0 16 16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></symbol>
+</svg>
+<a class="skip" href="#projects">Skip to projects</a>
+
+<div class="page">
+  <header class="bar">
+    <a class="home" href="./" aria-label="Carter Moseman — home"><svg class="cm-mark" viewBox="0 0 100 100" aria-hidden="true"><path class="t" d="M14 0 L72 0 L100 28 L100 86 A14 14 0 0 1 86 100 L14 100 A14 14 0 0 1 0 86 L0 14 A14 14 0 0 1 14 0 Z"/><g class="l"><g transform="translate(10.000 61.259) scale(0.01608 -0.01608)"><path d="M223.3262939453125 1111.087646484375Q223.3262939453125 1284.1087646484375 318.2462158203125 1349.0543823242188Q413.1661376953125 1414 599.057373046875 1414H1711.2551879882812Q1898.1826782226562 1414 1993.58447265625 1349.0543823242188Q2088.9862670898438 1284.1087646484375 2088.9862670898438 1111.087646484375V922.3157348632812L1676.5695190429688 846.3671264648438V1059.1693115234375Q1676.5695190429688 1059.1693115234375 1676.5695190429688 1059.1693115234375Q1676.5695190429688 1059.1693115234375 1676.5695190429688 1059.1693115234375H635.7430419921875Q635.7430419921875 1059.1693115234375 635.7430419921875 1059.1693115234375Q635.7430419921875 1059.1693115234375 635.7430419921875 1059.1693115234375V340.8306884765625Q635.7430419921875 340.8306884765625 635.7430419921875 340.8306884765625Q635.7430419921875 340.8306884765625 635.7430419921875 340.8306884765625H1683.6057739257812Q1683.6057739257812 340.8306884765625 1683.6057739257812 340.8306884765625Q1683.6057739257812 340.8306884765625 1683.6057739257812 340.8306884765625V579.6328735351562L2096.0225219726562 498.72052001953125V300.912353515625Q2096.0225219726562 120.37310791015625 2003.5482177734375 53.186553955078125Q1911.0739135742188 -14 1718.2914428710938 -14H599.057373046875Q406.27490234375 -14 314.80059814453125 53.427490234375Q223.3262939453125 120.85498046875 223.3262939453125 300.912353515625Z"/></g><g transform="translate(46.622 61.259) scale(0.01608 -0.01608)"><path d="M247.77191162109375 0V1400H629.9711303710938L1373.0890502929688 618.3329772949219L2068.8338623046875 1400H2449.6494140625V0H2037.232666015625V877.5704040527344L1337.187255859375 96.9940185546875L603.2763061523438 864.5990905761719V0Z"/></g></g></svg></a>
+    <nav aria-label="Primary" class="caps">
+      <a href="#projects">Projects</a>
+      <a href="https://github.com/cnmoseman" aria-label="GitHub"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><use href="#gh"/></svg></a>
+      <a href="https://www.linkedin.com/in/cartermoseman" aria-label="LinkedIn"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><use href="#in"/></svg></a>
+      <button type="button" id="theme-toggle" aria-label="Dark mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <section class="certs" aria-label="Certifications">
+    <div class="track">
+      <ul><li><a href="https://www.credly.com/badges/297ada53-ebed-45ff-aecf-ff26d65f969e" target="_blank" rel="noopener" title="Verify GXPN"><b>GXPN</b><span>GIAC Exploit Researcher and Advanced Penetration Tester</span></a></li><li><a href="https://www.credly.com/badges/73dbe65d-d6a6-421c-ab88-eeb1b26c4f5c" target="_blank" rel="noopener" title="Verify GPEN"><b>GPEN</b><span>GIAC Penetration Tester</span></a></li><li><a href="https://www.credential.net/5be5518e-c1ad-4cf4-9f15-fa24f63eacf7?username=cartermoseman45207" target="_blank" rel="noopener" title="Verify CRTO"><b>CRTO</b><span>Certified Red Team Operator</span></a></li><li><a href="https://www.credly.com/badges/d08f16f2-2c94-426d-83e4-f165c0db3aa5" target="_blank" rel="noopener" title="Verify GCIH"><b>GCIH</b><span>GIAC Certified Incident Handler</span></a></li><li><a href="https://www.credly.com/badges/9538911f-cb9d-484c-bda5-c195c1169502" target="_blank" rel="noopener" title="Verify GSEC"><b>GSEC</b><span>GIAC Security Essentials</span></a></li><li><a href="https://www.credly.com/badges/88518252-7df6-4cd4-ae0a-5c8161a25263" target="_blank" rel="noopener" title="Verify GPYC"><b>GPYC</b><span>GIAC Python Coder</span></a></li><li><a href="https://www.credly.com/badges/4bb19b56-08d6-4f12-9bdb-bae20bd8d08d" target="_blank" rel="noopener" title="Verify GFACT"><b>GFACT</b><span>GIAC Foundational Cybersecurity Technologies</span></a></li></ul>
+      <ul aria-hidden="true"><li><a href="https://www.credly.com/badges/297ada53-ebed-45ff-aecf-ff26d65f969e" target="_blank" rel="noopener" tabindex="-1" title="Verify GXPN"><b>GXPN</b><span>GIAC Exploit Researcher and Advanced Penetration Tester</span></a></li><li><a href="https://www.credly.com/badges/73dbe65d-d6a6-421c-ab88-eeb1b26c4f5c" target="_blank" rel="noopener" tabindex="-1" title="Verify GPEN"><b>GPEN</b><span>GIAC Penetration Tester</span></a></li><li><a href="https://www.credential.net/5be5518e-c1ad-4cf4-9f15-fa24f63eacf7?username=cartermoseman45207" target="_blank" rel="noopener" tabindex="-1" title="Verify CRTO"><b>CRTO</b><span>Certified Red Team Operator</span></a></li><li><a href="https://www.credly.com/badges/d08f16f2-2c94-426d-83e4-f165c0db3aa5" target="_blank" rel="noopener" tabindex="-1" title="Verify GCIH"><b>GCIH</b><span>GIAC Certified Incident Handler</span></a></li><li><a href="https://www.credly.com/badges/9538911f-cb9d-484c-bda5-c195c1169502" target="_blank" rel="noopener" tabindex="-1" title="Verify GSEC"><b>GSEC</b><span>GIAC Security Essentials</span></a></li><li><a href="https://www.credly.com/badges/88518252-7df6-4cd4-ae0a-5c8161a25263" target="_blank" rel="noopener" tabindex="-1" title="Verify GPYC"><b>GPYC</b><span>GIAC Python Coder</span></a></li><li><a href="https://www.credly.com/badges/4bb19b56-08d6-4f12-9bdb-bae20bd8d08d" target="_blank" rel="noopener" tabindex="-1" title="Verify GFACT"><b>GFACT</b><span>GIAC Foundational Cybersecurity Technologies</span></a></li></ul>
+    </div>
+  </section>
+
+  <div class="split">
+    <section class="profile" aria-label="About">
+      <h1>Carter<br>Moseman</h1>
+      <p>A cybersecurity professional with six years of experience, working toward a degree in cybersecurity and new certifications, building tools for the community, and helping others along their own cyber journey.</p>
+      <div class="links caps">
+        <a href="https://github.com/cnmoseman"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><use href="#gh"/></svg>cnmoseman on GitHub</a>
+        <a href="https://www.linkedin.com/in/cartermoseman"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><use href="#in"/></svg>LinkedIn</a>
+        <span class="mail"><a href="mailto:contact@cnm-tx.com"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><use href="#mail"/></svg><span class="addr">contact@cnm-tx.com</span></a><button type="button" id="copy-mail" aria-label="Copy email address">Copy</button></span>
+      </div>
+    </section>
+
+    <main class="work" id="main">
+      <section id="projects" aria-labelledby="projects-h">
+        <div class="sec-h"><h2 id="projects-h">Projects</h2><span class="caps" id="project-count">4 projects</span></div>
+        <!-- To add a project: copy one <li> below, give its .card a background color, and update the count above. -->
+        <ul class="projects">
+          <li>
+            <a class="card htb" href="https://cnmoseman.github.io/htb-study-trackers/" aria-labelledby="htb-h htb-cta">
+              <span class="badges" aria-hidden="true"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cjca.png" alt="" width="96" height="96" style="--c:#2f95ff"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cpts.png" alt="" width="96" height="96" style="--c:#a34ff2"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cwes.png" alt="" width="96" height="96" style="--c:#ed635e"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cdsa.png" alt="" width="96" height="96" style="--c:#00eafc"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cwee.png" alt="" width="96" height="96" style="--c:#fcc000"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cape.png" alt="" width="96" height="96" style="--c:#e436b4"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cwpe.png" alt="" width="96" height="96" style="--c:#f05a1e"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/coae.png" alt="" width="96" height="96" style="--c:#9d94ea"></span>
+              <p class="mine caps" id="htb-mine" hidden></p>
+              <h3 id="htb-h">HTB Study Trackers</h3>
+              <p>A day-by-day plan and a notes vault for every Hack The Box certification path: 1,980 tasks to check off, saved in your browser and usable offline.</p>
+              <span class="meta caps"><span id="htb-cta">Open trackers <svg class="ic go" viewBox="0 0 16 16" aria-hidden="true"><use href="#arr"/></svg></span><span class="st">Live</span></span>
+            </a>
+          </li>
+          <li>
+            <div class="card hemo soon" aria-labelledby="hemo-h">
+              <svg class="art" viewBox="0 0 977 802" aria-hidden="true"><use href="#hemo-mark"/></svg>
+              <h3 id="hemo-h"><span class="wm" role="img" aria-label="Hemo OS"></span></h3>
+              <p>One Kali base image with tools installed per role, from 8 roles, rebuilt clean for every engagement. Runs on VMware, KVM and VirtualBox.</p>
+              <span class="meta caps"><span>A Kali workstation</span><span class="st">Coming soon</span></span>
+            </div>
+          </li>
+          <li>
+            <div class="card hann soon" aria-labelledby="hann-h">
+              <img class="art" src="assets/hannibal-crest.png" alt="" width="856" height="900" loading="lazy">
+              <h3 id="hann-h" class="word" aria-label="Hannibal">ĦΔΠΠΙΒΔŁ</h3>
+              <p>An offensive security assistant for scope-gated recon, attack-path analysis, and reporting.</p>
+              <span class="meta caps"><span>In private testing</span><span class="st">Coming soon</span></span>
+            </div>
+          </li>
+          <li>
+            <div class="card giac soon" aria-labelledby="giac-h">
+              <div class="g-tabs" aria-hidden="true"><span>1.1</span><span>1.2</span><span>1.3</span><span>2.1</span><span>2.2</span><span>2.3</span><span>3.1</span></div>
+              <h3 id="giac-h">The GIAC Index</h3>
+              <p>Find any answer before the clock runs out.</p>
+              <span class="meta caps"><span>A GIAC study guide</span><span class="st">Coming soon</span></span>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <footer>Carter Moseman · <a href="mailto:contact@cnm-tx.com">contact@cnm-tx.com</a></footer>
+    </main>
+  </div>
+</div>
+
+<script>
+  /* light/dark toggle (Bone is the default; the choice is remembered in this browser) */
+  (function () {
+    var root = document.documentElement, btn = document.getElementById("theme-toggle"),
+        meta = document.querySelector('meta[name="theme-color"]');
+    function sync() {
+      var dark = root.dataset.theme === "dark";
+      btn.setAttribute("aria-pressed", dark);
+      meta.setAttribute("content", dark ? "#141413" : "#efece4");
+    }
+    btn.addEventListener("click", function () {
+      if (root.dataset.theme === "dark") delete root.dataset.theme; else root.dataset.theme = "dark";
+      try { localStorage.setItem("theme", root.dataset.theme === "dark" ? "dark" : "light"); } catch (e) {}
+      sync();
+    });
+    sync();
+  })();
+
+  /* copy the email address (the link itself still opens a mail app) */
+  (function () {
+    var b = document.getElementById("copy-mail"), t;
+    if (!navigator.clipboard) { b.hidden = true; return; }
+    b.addEventListener("click", function () {
+      navigator.clipboard.writeText("contact@cnm-tx.com").then(function () {
+        b.textContent = "Copied"; b.setAttribute("aria-label", "Email address copied"); clearTimeout(t);
+        t = setTimeout(function () { b.textContent = "Copy"; b.setAttribute("aria-label", "Copy email address"); }, 1600);
+      });
+    });
+  })();
+
+  /* saved progress (same-origin localStorage, written by the trackers), summed up on the HTB card */
+  (function () {
+    var certs = [["CJCA", "cjca_tracker_v2", 213], ["CPTS", "cpts_tracker_v2", 444], ["CWES", "cwes_tracker_v2", 231],
+                 ["CDSA", "cdsa_tracker_v2", 212], ["CWEE", "cwee_tracker_v2", 237], ["CAPE", "cape_tracker_v2", 290],
+                 ["CWPE", "cwpe_tracker_v2", 163], ["COAE", "coae_tracker_v2", 190]], mine = [];
+    certs.forEach(function (c) {
+      var st; try { st = JSON.parse(localStorage.getItem(c[1])); } catch (e) { return; }
+      if (!st || !st.done || typeof st.done !== "object") return;
+      var done = 0;
+      for (var k in st.done) if (st.done[k] === true && /^\d+-\d+$/.test(k)) done++;
+      if (!done) return;
+      mine.push(done >= c[2] ? "<b>" + c[0] + "</b> done" : "<b>" + c[0] + "</b> " + Math.min(100, Math.floor(done / c[2] * 100)) + "%");
+    });
+    if (mine.length) { var m = document.getElementById("htb-mine"); m.innerHTML = "<span>Your progress</span>" + mine.map(function (x) { return "<span>" + x + "</span>"; }).join(""); m.hidden = false; }
+  })();
+
+  /* page-view counter (GoatCounter, no cookies), same account as the trackers; live site only */
+  if (location.hostname === "cnmoseman.github.io") {
+    var gc = document.createElement("script");
+    gc.async = true; gc.src = "https://cnmoseman.github.io/htb-study-trackers/assets/js/count.js";
+    gc.dataset.goatcounter = "https://cnmoseman.goatcounter.com/count";
+    document.head.appendChild(gc);
+  }
+</script>
+</body>
+</html>
