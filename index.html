@@ -143,7 +143,7 @@ a.card:hover::after{opacity:1}
 .card:focus-visible{outline:3px solid currentColor;outline-offset:-10px}
 .card .art{position:absolute;z-index:-1;pointer-events:none;right:7%;top:6%;width:min(46%,290px);color:var(--hemo-logo)}
 /* the eight cert badges, each overlapping the previous one by half, ringed in its tracker color */
-.badges{--b:clamp(48px,6.4vw,92px);display:flex;align-self:flex-end;margin-bottom:auto;padding-left:calc(var(--b) / 2)}
+.badges{--b:clamp(46px,14.5vw,92px);display:flex;align-self:flex-end;margin-bottom:auto;padding-left:calc(var(--b) / 2)}
 .badges img{width:var(--b);height:var(--b);border-radius:50%;background:var(--ink);margin-left:calc(var(--b) / -2);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 70%,transparent),0 0 10px color-mix(in srgb,var(--c) 35%,transparent)}
 .card .mine{display:flex;flex-wrap:wrap;gap:6px 18px;font-variant-numeric:tabular-nums}
 .card .mine[hidden]{display:none}
@@ -184,7 +184,7 @@ a.card:hover::after{opacity:1}
   box-shadow:inset 0 1px 0 rgba(192,138,62,.18),0 0 0 1px color-mix(in srgb,var(--hann-ink) 34%,transparent),0 22px 44px -22px var(--shadow),0 8px 18px -12px var(--shadow)}
 /* Hannibal's wordmark cipher is set in Cinzel (the app's own font); sized to fill the left half so it reads as large
    as the HTB and Hemo titles while clearing the logo on the right */
-.card.hann h3.word{font-family:"Cinzel",Georgia,serif;font-weight:700;font-stretch:normal;letter-spacing:.012em;line-height:1;color:var(--hann-ink);font-size:min(72px,18cqi)}
+.card.hann h3.word{font-family:"Cinzel",Georgia,serif;font-weight:700;font-stretch:normal;letter-spacing:.012em;line-height:1;color:var(--hann-ink);font-size:min(72px,15.5cqi)}
 /* the whole logo (crest + banner) on the right half, height-fit so the card stays the same height as the others;
    the copy is held to the left half so the two never overlap */
 .card.hann .art{right:3%;top:43%;transform:translateY(-50%);width:auto;height:auto;max-width:33%;max-height:66%;filter:drop-shadow(0 8px 20px rgba(0,0,0,.45))}
