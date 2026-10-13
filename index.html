@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Carter Moseman</title>
-<meta name="description" content="Carter Moseman, a cybersecurity professional building tools for the community: HTB Study Trackers for Hack The Box certifications, Hemo OS, a Kali workstation rebuilt clean for every engagement, Hannibal, an offensive-security cockpit, and The GIAC Index, a guide to indexing open-book GIAC exams.">
+<meta name="description" content="Carter Moseman, a cybersecurity professional building tools for the community: HTB Study Trackers for Hack The Box certifications, Hemo OS, a Kali workstation rebuilt clean for every engagement, Hannibal, an offensive-security cockpit, and The Short Stack Method, a guide to indexing open-book GIAC exams.">
 <meta name="theme-color" content="#efece4">
 <script>
   /* apply the saved theme before first paint (Bone light is the default; Graphite is dark) */
@@ -27,7 +27,7 @@
   } catch (e) {}
 </script>
 <meta property="og:title" content="Carter Moseman">
-<meta property="og:description" content="Security projects and guides: HTB Study Trackers, Hemo OS, Hannibal, and The GIAC Index.">
+<meta property="og:description" content="Security projects and guides: HTB Study Trackers, Hemo OS, Hannibal, and The Short Stack Method.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://cnmoseman.github.io/">
 <meta property="og:image" content="https://cnmoseman.github.io/assets/og.png">
@@ -167,7 +167,7 @@ a.card:hover::after{opacity:1}
 .card.htb p{font-family:"Chakra Petch",var(--f);font-size:16.5px}
 /* the Hemo card uses the Hemo OS page's own body font so its copy matches where it leads */
 .card.hemo p{font-family:"Averia Serif Libre","Georgia",serif}
-/* The GIAC Index card: oxblood field, Spectral title, a section-numbered thumb edge (matches the guide page) */
+/* The Short Stack Method (GIAC guide) card: oxblood field, Spectral title, a thumb edge numbered 01-14 like the guide page's section rail */
 .card.giac{background-color:#7c2b2b;color:#f3ede0;font-family:"Spectral","Georgia",serif;padding-right:46px;container-type:inline-size}
 .card.giac .g-kick{position:absolute;top:clamp(24px,3vw,36px);left:clamp(24px,3vw,36px);color:#eccfcf;font-family:"JetBrains Mono",ui-monospace,monospace;font-weight:600;letter-spacing:.2em;text-transform:uppercase;font-size:11px}
 .card.giac h3{font-family:"Spectral",serif;font-weight:800;font-stretch:normal;font-size:min(72px,13cqi);letter-spacing:-.01em;line-height:.98}
@@ -307,12 +307,12 @@ footer{margin-top:clamp(56px,8vw,96px);padding-block:22px 32px;border-top:1px so
             </div>
           </li>
           <li>
-            <div class="card giac soon" aria-labelledby="giac-h">
-              <div class="g-tabs" aria-hidden="true"><span>1.1</span><span>1.2</span><span>1.3</span><span>2.1</span><span>2.2</span><span>2.3</span><span>3.1</span></div>
-              <h3 id="giac-h">The GIAC Index</h3>
-              <p>Find any answer before the clock runs out.</p>
-              <span class="meta caps"><span>A GIAC study guide</span><span class="st">Coming soon</span></span>
-            </div>
+            <a class="card giac" href="giac-index/" aria-labelledby="giac-h giac-cta">
+              <div class="g-tabs" aria-hidden="true"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span><span>07</span><span>08</span><span>09</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span></div>
+              <h3 id="giac-h">The Short Stack Method</h3>
+              <p>How I index for a GIAC exam.</p>
+              <span class="meta caps"><span id="giac-cta">Read the guide <svg class="ic go" viewBox="0 0 16 16" aria-hidden="true"><use href="#arr"/></svg></span><span class="st">Guide</span></span>
+            </a>
           </li>
         </ul>
       </section>

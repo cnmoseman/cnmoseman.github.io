@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="How I build my index for open-book GIAC exams with the Short Stack Method, a fork of the Pancake Method. By Carter Moseman.">
+<meta name="theme-color" content="#7c2b2b">
+<link rel="canonical" href="https://cnmoseman.github.io/giac-index/">
+<link rel="icon" href="/assets/favicon-cm.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:title" content="How I Index for a GIAC Exam: The Short Stack Method">
+<meta property="og:description" content="The Short Stack Method: how I build three indexes (section, A-Z, and lab) for open-book GIAC exams. A fork of the Pancake Method, with a free template.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://cnmoseman.github.io/giac-index/">
+<meta property="og:image" content="https://cnmoseman.github.io/giac-index/img/og-short-stack.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Short Stack Method: How I index for a GIAC exam, by Carter Moseman">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How I Index for a GIAC Exam: The Short Stack Method">
+<meta name="twitter:description" content="The Short Stack Method: how I build three indexes (section, A-Z, and lab) for open-book GIAC exams. A fork of the Pancake Method, with a free template.">
+<meta name="twitter:image" content="https://cnmoseman.github.io/giac-index/img/og-short-stack.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<title>How I Index for a GIAC Exam: The Short Stack Method</title>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How I Index for a GIAC Exam: The Short Stack Method",
+  "alternativeHeadline": "The Short Stack Method",
+  "description": "The Short Stack Method: how I build three indexes (section, A-Z, and lab) for open-book GIAC exams. A fork of the Pancake Method, with a free template.",
+  "image": "https://cnmoseman.github.io/giac-index/img/og-short-stack.png",
+  "datePublished": "2026-10-13",
+  "dateModified": "2026-10-13",
+  "author": {"@type": "Person", "name": "Carter Moseman", "url": "https://cnmoseman.github.io/",
+             "sameAs": ["https://github.com/cnmoseman", "https://www.linkedin.com/in/cartermoseman"]},
+  "mainEntityOfPage": "https://cnmoseman.github.io/giac-index/",
+  "about": ["GIAC certification", "Open-book exam indexing"],
+  "isBasedOn": "https://tisiphone.net/2015/08/18/giac-testing/"
+}
+</script>
+<style>
+/* "Thumb Index": a reference-book world. Crisp cool paper, oxblood accents, Spectral throughout, mono for refs and
+   data. A fixed thumb-tab rail, labeled by course section, frames the page like a thumb-indexed manual.
+   Deliberately single-look, so every color is set explicitly. */
+:root{
+  --paper:#f3f3f1; --paper2:#e8e8e4; --card:#ffffff; --ink:#1b1a1c; --ink2:#55535a; --faint:#8a8891;
+  --red:#7c2b2b; --red2:#55201f; --soft:#e2e0db; --rule:#dcdad5;
+  --d:"Spectral",Georgia,"Times New Roman",serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  --col:40rem; --rail:36px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+section[id]{scroll-margin-top:72px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--d);font-size:19px;line-height:1.62;-webkit-font-smoothing:antialiased;padding-right:var(--rail)}
+::selection{background:var(--red);color:var(--paper)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.wrap{width:min(100% - 40px, var(--col));margin-inline:auto}
+
+/* fixed section thumb rail */
+.thumbrail{position:fixed;top:0;right:0;bottom:0;width:var(--rail);background:var(--red2);display:flex;flex-direction:column;z-index:30}
+.thumbrail a{position:relative;flex:1;color:#f3ede0;opacity:.5;font:600 11px/1 var(--mono);letter-spacing:.03em;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:opacity .15s,background .15s}
+.thumbrail a:hover{opacity:1;background:#3f1716}
+.thumbrail a.on{opacity:1;background:#3f1716;color:#fff}
+.thumbrail a .rl{position:absolute;right:calc(100% + 8px);top:50%;transform:translateY(-50%);white-space:nowrap;background:var(--red2);color:#f3ede0;font:600 11px/1 var(--mono);letter-spacing:0;text-transform:none;padding:7px 11px;border-radius:7px;opacity:0;pointer-events:none;transition:opacity .15s;box-shadow:0 10px 24px -12px rgba(0,0,0,.55)}
+.thumbrail a:hover .rl,.thumbrail a:focus-visible .rl{opacity:1}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule)}
+.bar .wrap{width:100%;max-width:none;margin:0;padding-inline:clamp(20px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px}
+.bar a.back{font:600 13px/1 var(--mono);letter-spacing:.02em;text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;gap:8px}
+.bar a.back:hover{color:var(--red)}
+.bar .tag{font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* masthead */
+.masthead{background:var(--red);color:#f3ede0}
+.masthead .wrap{padding:clamp(44px,8vw,92px) 0 clamp(34px,5vw,52px)}
+.masthead h1{color:#f6efe3}
+h1{font-weight:800;font-size:clamp(40px,8.5vw,78px);line-height:.98;letter-spacing:-.015em;margin:0}
+.alias{font-family:var(--d);font-style:italic;font-weight:500;font-size:clamp(24px,3.8vw,36px);line-height:1.15;color:#eed3d3;margin:18px 0 0}
+.byline{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-top:28px;font:500 13px/1.5 var(--mono);color:#d4a9a9;letter-spacing:.02em}
+.byline b{color:#f6efe3;font-weight:700}
+.intro{padding-top:clamp(34px,6vw,54px)}
+.lead{margin:0 0 20px;font-size:21px;line-height:1.6}
+.lead:first-of-type::first-letter{initial-letter:2.4;font-weight:800;color:var(--red);margin-right:.08em;font-family:var(--d)}
+
+/* sections */
+section{padding-block:clamp(26px,5vw,48px)}
+.eyebrow{font:700 12px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin:0 0 10px}
+h2{font-weight:800;font-size:clamp(27px,4.4vw,38px);line-height:1.06;letter-spacing:-.01em;margin:0 0 16px;max-width:22ch}
+.rule{height:2px;background:var(--red);width:48px;margin:0 0 22px}
+section h3{font-weight:700;font-size:21px;line-height:1.25;margin:30px 0 10px;letter-spacing:-.005em}
+section h3:first-of-type{margin-top:16px}
+p{margin:0 0 18px;max-width:34em}
+p:last-child{margin-bottom:0}
+strong{font-weight:700}
+em{font-style:italic}
+code{font-family:var(--mono);font-size:.82em;background:var(--paper2);border:1px solid var(--rule);border-radius:4px;padding:.08em .35em;color:var(--red2)}
+
+/* content links */
+.intro a, main section a, footer a{color:var(--red2);text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:.2em}
+.intro a:hover, main section a:hover, footer a:hover{text-decoration-color:var(--red)}
+
+/* lists */
+ol{margin:0 0 18px;padding-left:1.5em;max-width:34em}
+ol li{margin:0 0 7px}
+ul.plain{list-style:none;margin:0 0 18px;padding:0;max-width:34em;display:flex;flex-direction:column;gap:9px}
+ul.plain li{padding-left:20px;position:relative;line-height:1.45}
+ul.plain li::before{content:"";position:absolute;left:3px;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--red)}
+
+/* a highlighted aside */
+.note-box{background:var(--card);border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:13px 17px;margin:0 0 18px;max-width:34em}
+.note-box p{margin:0}
+.note-box strong{color:var(--red2)}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;margin:16px 0 22px;-webkit-overflow-scrolling:touch}
+table.tbl{width:100%;border-collapse:collapse;background:var(--card);font-size:15px;min-width:560px}
+table.tbl th{background:var(--red);color:#f3ede0;font:700 11px/1.3 var(--mono);letter-spacing:.07em;text-transform:uppercase;text-align:left;padding:10px 13px;border:1px solid #1f1d1c}
+table.tbl td{padding:11px 13px;border:1px solid #1f1d1c;vertical-align:top;line-height:1.45}
+table.tbl td.price{font-family:var(--mono);font-size:13px;color:var(--red2);white-space:nowrap}
+table.tbl code{background:none;border:0;padding:0;font-size:.9em;color:var(--red2)}
+
+/* example screenshots */
+/* the screenshots are wide spreadsheets, so they break out of the text column (up to 1180px) to stay legible,
+   and scroll sideways on narrow screens instead of shrinking */
+figure.shot{--w:min(100vw - var(--rail) - 40px, 1180px);width:var(--w);margin:18px 0 24px calc((100% - var(--w)) / 2)}
+figure.shot .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--rule);border-radius:6px;background:#fff}
+figure.shot img{display:block;width:100%;min-width:860px;height:auto}
+figure.shot figcaption{font:500 12px/1.5 var(--mono);color:var(--faint);margin-top:8px}
+figure.shot figcaption a{color:inherit}
+
+/* template download */
+a.dl{display:inline-flex;align-items:center;gap:8px;font:700 13px/1 var(--mono);letter-spacing:.03em;color:var(--red2);text-decoration:none;border-bottom:2px solid var(--rule);padding-bottom:3px}
+a.dl:hover{border-color:var(--red)}
+
+/* footer */
+footer{border-top:1px solid var(--rule);padding-block:30px 44px;margin-top:20px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline;justify-content:space-between;font:500 13px/1.6 var(--mono);color:var(--faint)}
+footer a{border-bottom:1.5px solid var(--rule);text-decoration:none}
+footer a:hover{border-color:var(--red);color:var(--red)}
+
+/* jump note */
+.jump{font-size:18px;color:var(--ink2);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;margin:10px 0}
+.jump strong{color:var(--ink)}
+.jump a{color:var(--red2);font-weight:700;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:.2em}
+.jump a:hover{text-decoration-color:var(--red)}
+
+@media (max-width:620px){
+  :root{--rail:22px}
+  body{font-size:18px}
+  .lead:first-of-type::first-letter{initial-letter:2}
+  .thumbrail a .rl{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="thumbrail" aria-label="Sections">
+  <a href="#basics" aria-label="What Is Indexing?"><span class="rl">What Is Indexing?</span>01</a>
+  <a href="#schedule" aria-label="My Study Schedule"><span class="rl">My Study Schedule</span>02</a>
+  <a href="#needs" aria-label="What You Need"><span class="rl">What You Need</span>03</a>
+  <a href="#setup" aria-label="Setting Up Your Textbooks"><span class="rl">Setting Up Your Textbooks</span>04</a>
+  <a href="#reading" aria-label="Reading and Highlighting"><span class="rl">Reading and Highlighting</span>05</a>
+  <a href="#building" aria-label="Building the Index"><span class="rl">Building the Index</span>06</a>
+  <a href="#quizzes" aria-label="Quizzes and the A-Z Index"><span class="rl">Quizzes and the A-Z Index</span>07</a>
+  <a href="#workbooks" aria-label="Indexing the Workbooks (CyberLive)"><span class="rl">Indexing the Workbooks (CyberLive)</span>08</a>
+  <a href="#binder" aria-label="Printing and Binder Setup"><span class="rl">Printing and Binder Setup</span>09</a>
+  <a href="#finalprep" aria-label="Final Prep (Exams Without CyberLive)"><span class="rl">Final Prep (Exams Without CyberLive)</span>10</a>
+  <a href="#finalprep-cl" aria-label="Final Prep (CyberLive Exams)"><span class="rl">Final Prep (CyberLive Exams)</span>11</a>
+  <a href="#exam" aria-label="Using Your Indexes on the Exam"><span class="rl">Using Your Indexes on the Exam</span>12</a>
+  <a href="#template" aria-label="The template"><span class="rl">The template</span>13</a>
+  <a href="#thoughts" aria-label="Final Thoughts"><span class="rl">Final Thoughts</span>14</a>
+</nav>
+
+<header class="bar"><div class="wrap">
+  <a class="back" href="/">&larr; Carter Moseman</a>
+  <span class="tag">A GIAC Index Guide</span>
+</div></header>
+
+<main>
+  <section class="masthead"><div class="wrap">
+    <h1>The Short Stack Method</h1>
+    <p class="alias">How I index for a GIAC exam</p>
+    <p class="byline"><span>By <b>Carter Moseman</b></span><span>GXPN · GPEN · GCIH · GPYC · GSEC · GFACT</span></p>
+  </div></section>
+
+  <div class="wrap intro">
+    <p class="lead">I have about six years of cyber experience on both offense and defense, and I have taken six GIAC exams so far (GPYC, GXPN, GPEN, GFACT, GCIH, and GSEC). I study for about seven weeks for each one, and my average exam score is 95%. This is a write-up on how I make my index for those exams.</p>
+    <p class="lead">I have not reinvented the wheel here. My method is a fork of the <a href="https://tisiphone.net/2015/08/18/giac-testing/" target="_blank" rel="noopener">Pancake Method</a> by Lesley Carhart, aka Hacks4Pancakes, and I wanted to share my slightly different take on making the index. If you have not read her post, I highly recommend it. I call my version the Short Stack Method, because (according to IHOP) a short stack is three pancakes tall, and by the end of this you will have a stack of three indexes: the section index, the A-Z index, and the lab index (if your exam has CyberLive questions).</p>
+    <p class="lead">I have attached <a href="#template">the Short Stack index template</a> I use (more on it in <a href="#building">Building the Index</a>), and the materials I mention are linked in the <a href="#needs">What You Need</a> section.</p>
+  </div>
+
+  <section class="wrap" id="basics">
+    <p class="eyebrow">Section 01</p>
+    <h2>What Is Indexing?</h2>
+    <div class="rule"></div>
+    <p>If this is your first GIAC exam, here is how it works. You will most likely take the SANS course that is associated with the GIAC exam. The exams are all open book (see <a href="https://www.giac.org/knowledge-base/proctor" target="_blank" rel="noopener">GIAC's open book policy</a>), so you create an index of important information and where to find it in your textbooks. That way, when you are taking the exam and get asked a question about a topic, you can find the answer quickly in the right book.</p>
+    <p>That said, GIAC exams are timed, so you do not have time to look up every question. If you try, you will run out of time before you get through the whole exam.</p>
+    <p>After going through this whole process (which I talk about below), I find that I rarely use my index during the exam. Because of the amount of work that goes into my index, it feels a little silly sometimes, but I know that if I did not make my index this way, I would need it way more. So please make an index, even if you do not think you need one or are thinking about getting someone else's (which you should not do). Taking the time to make the index helps you learn the material, not just take the exam and brain dump it afterward. And why leave a $9,000 to $11,000 course and exam up to chance or another person's index?</p>
+    <p>How you index is all up to you, but this is how I do it, and it has worked great for me.</p>
+
+    <h3>Your Course Books</h3>
+    <p>Your course could come with a few types of books. Every course has textbooks, which are just knowledge. If your exam has CyberLive questions, your course will also come with workbooks, which have the labs in them, and some courses also come with Lightning Lab books. You treat the Lightning Lab books the same as the workbooks. If your exam has no CyberLive questions, you will most likely only be working with the textbooks.</p>
+
+    <h3>The Process at a Glance</h3>
+    <p>Here is the whole process, start to finish:</p>
+    <ol>
+      <li>Set up a textbook with its book and section tabs.</li>
+      <li>Read and highlight the book.</li>
+      <li>Build the section index with the terms, definitions, book, section, and page.</li>
+      <li>Take the quiz for that book, then repeat steps 1-4 for every textbook.</li>
+      <li>Build the A-Z index from your section index.</li>
+      <li>If your exam has CyberLive questions, index the workbooks, do the labs, and do the CTF.</li>
+      <li>Print your indexes and set up your binder.</li>
+      <li>Final prep: retake the quizzes, take the practice exams, rest the day before, and take the exam.</li>
+    </ol>
+  </section>
+
+  <section class="wrap" id="schedule">
+    <p class="eyebrow">Section 02</p>
+    <h2>My Study Schedule</h2>
+    <div class="rule"></div>
+    <p>I am a full-time student, I work part time, and I still study for other certs (CRTO, COAE, CPTS, etc.). I also have other responsibilities while doing my SANS coursework, and I still enjoy my hobbies daily. With all that being said, I spend an average of 4-5 hours a day on the SANS coursework for the respective GIAC cert.</p>
+    <p>I try to be done with all the textbooks (fully indexed and all quizzes taken) about three weeks before my exam date. That gives me time to index the workbooks, do the labs, do the CTF, and take the practice exams. For exams with no CyberLive questions, I have more time to index and study the material from the textbooks.</p>
+  </section>
+
+  <section class="wrap" id="needs">
+    <p class="eyebrow">Section 03</p>
+    <h2>What You Need</h2>
+    <div class="rule"></div>
+    <p>Here is what I use to set up my books and binder:</p>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Item</th><th>Price</th><th>Why I use it</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://www.amazon.com/Kokuyo-Campus-Notebook-Transparent-L-P173T/dp/B076V1LY41?psc=1" target="_blank" rel="noopener">30-hole binder</a></td><td class="price">$15</td><td>When I am looking for terms as fast as I can, I think I would tear the pages out of a 3-ring binder.</td></tr>
+        <tr><td><a href="https://www.amazon.com/Carl-GP-2630-CARL-Binding-Punch/dp/B0C2B8NQ97" target="_blank" rel="noopener">Hole punch</a></td><td class="price">$20</td><td>Punches my index pages for the 30-hole binder.</td></tr>
+        <tr><td><a href="https://www.amazon.com/dp/B0DQF3KPCJ?th=1" target="_blank" rel="noopener">Highlighters</a> or <a href="https://www.amazon.com/Zebra-WKCR1-10C-Fluorescent-Marker-Colors/dp/B0018RJM2G?th=1" target="_blank" rel="noopener">Zebra highlighters</a></td><td class="price">$8 or $10</td><td>For color-coding each section.</td></tr>
+        <tr><td><a href="https://www.amazon.com/Sharpie-Permanent-Marker-Point-Black/dp/B000I0TZO4" target="_blank" rel="noopener">Sharpie</a></td><td class="price">$5</td><td>For labeling the book covers, book tabs, and section tabs.</td></tr>
+        <tr><td><a href="https://www.amazon.com/Mr-Colorful-Notebooks-Markers-Notebook/dp/B0CN39PXBM?psc=1" target="_blank" rel="noopener">Tabs (Pastel)</a></td><td class="price">$6</td><td>Large and sturdy book and section tabs. I can flip through the whole book by holding onto them, which comes in handy when frantically looking for a page during the exam.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="wrap" id="setup">
+    <p class="eyebrow">Section 04</p>
+    <h2>Setting Up Your Textbooks</h2>
+    <div class="rule"></div>
+    <p>I only set up one book at a time, because it lets me skim the book and start mentally prepping for the topics the book is about to cover.</p>
+
+    <h3>Book Tabs</h3>
+    <p>First, I use a Sharpie to mark all my textbooks on the front with large numbers for what they are: 1, 2, 3, etc.</p>
+    <p>Next, I take the tabs that I only use as book tabs, not section tabs. These are the ones with the pink or blue lines on the top and bottom of the tab and white space in the middle. Starting with the first book, I place a tab at the top far left, behind the main cardstock page, so it sticks out of the top of the book, and label it with the matching number using a Sharpie. When you move on to the next book, place its tab right next to where you placed the first one. If the two tabs were on the same page, the right edge of Book 1's tab would be touching the left edge of Book 2's tab. That way, if you lay the books on top of each other, the tabs sit side by side and do not overlap. Keep doing this until you get to the end, then just start over on the left side.</p>
+
+    <h3>Section Tabs</h3>
+    <div class="note-box"><p><strong>Do not write the numbers on the section tabs as you go.</strong> Wait until every section tab in the book is placed and you are happy with the placement.</p></div>
+    <p>Next come the section tabs. These go on the Course Roadmap page at the start of each section (the one that lists the other sections with an arrow showing which section you are on). If the Course Roadmap is on the left page, the tab goes on the left side of that page, and if it is on the right page, the tab goes on the right side. That way, when the book is closed and facing you, all the section tabs stick out on the right side of the book.</p>
+    <p>I start with orange and place it at the top of the Course Roadmap page. This will be Section 1. Then I go to the next section and do the same thing with the next color, dark blue, placing it just below where the first tab sits. Rinse and repeat until every section of the book has a tab, following along with the index template's colors to keep them in order. Once you get to the last color, just start over back at orange.</p>
+    <p>This will take some guesstimating, because the goal is to have all your section tabs visible from the outside, with Section 1 at the top and your very last section at the very bottom. That way, no section tabs are hidden behind the others, because a hidden tab makes finding your section more difficult. You may have to go back and readjust the tabs so that all of them are visible.</p>
+    <p>For the specific tabs I use, see <a href="#needs">What You Need</a>.</p>
+    <p>Once you are happy with the tab placement, write the section numbers on them with a Sharpie. Start with 1 and just count up across all the textbooks, so if the last section of Book 1 is 12, the first section of Book 2 will be 13.</p>
+  </section>
+
+  <section class="wrap" id="reading">
+    <p class="eyebrow">Section 05</p>
+    <h2>Reading and Highlighting</h2>
+    <div class="rule"></div>
+    <p>For the reading, you will need the highlighter that matches that section's tab color. Section 1 is orange, so I grab the orange highlighter, and as I read through the section, I highlight the things I think are important and that I should know for that section. This is very subjective, because everyone will think different things are important, but the main thing here is to be selective. If you highlight everything, nothing is important. The things you highlight will also guide what goes into your index, so when you sit down to build it, your highlights are your starting point. When you are taking the exam, hopefully the things you highlighted will be the information you need (or close to it), and the highlighting makes it fast to find and eye-catching. Once you have gone through the section, change your highlighter to the next color and do the same thing.</p>
+    <p>I like to read three sections and then go to my index and start filling it in. There is no rhyme or reason to this. I have played around with reading the whole book and then indexing, and with indexing one section at a time, but I just like three at a time.</p>
+
+    <h3>Videos</h3>
+    <p>I typically do not watch all of the videos. If there is a topic or page I am having trouble understanding, or I want to know more about it because I am interested, I will find that video and watch it. I will typically jot this extra information down on the page I watched the video for. This usually locks it into my head, and I do not even need the extra notes, but without making the notes, this would not have happened.</p>
+  </section>
+
+  <section class="wrap" id="building">
+    <p class="eyebrow">Section 06</p>
+    <h2>Building the Index</h2>
+    <div class="rule"></div>
+    <p>I fill out my index on my computer in Google Sheets, Excel, or LibreOffice Calc. Each row has a term, a definition, the book number (BK), the section number and title, and the page number (PG). My template has three tabs: How to Use, Section Index, and Lab Index. The header row stays on screen while you scroll, each column header has a note you can hover over for a reminder, and the PG column is set to text so page ranges like 5-8 do not turn into dates. Here is an example of what it looks like:</p>
+    <figure class="shot"><div class="scroll"><img src="img/section_index_example.png" width="1520" height="257" loading="lazy" alt="Example section index: nine terms such as CIA Triad, MFA and OSI Model, each row colored by its section, with the BK column in pink or blue by book"></div><figcaption>Example section index, rows colored by section · <a href="img/section_index_example.png" target="_blank" rel="noopener">open full size</a></figcaption></figure>
+
+    <h3>Term</h3>
+    <p>The term goes on the far left (CIA Triad). Try to make it something you would remember. It does not have to be verbatim. Once all the textbooks are indexed, you will make a copy of this index and sort it A-Z by term, so think about which word will stand out to you when you get asked a question. For example, if I have a term about Windows Firewall, I know the word "firewall" will stand out to me more than "Windows," so I will call the term "Firewall - Windows." That way, I can find it faster once the index is sorted A-Z.</p>
+
+    <h3>Definition</h3>
+    <p>The definition goes in the middle. Try to keep it short, with just enough information to jog your memory, plus things you know you will not remember but think you should (long numbers, file locations, protocols, etc.). Again, this is all personal preference. As you can see from the example, mine has some shorthand, and it does not really read nicely, but I know what I mean, and that is what matters.</p>
+    <p>Try to keep the definition on one line in the index. Again, if you fill your definition with all this information, none of the information will be important. Be selective.</p>
+    <p>For the terms and definitions, you should also bold the things that are important so they stand out to you. I always bold commands and acronyms (<strong>nmap -sV X.X.X.X</strong>, <strong>CDP</strong>).</p>
+
+    <h3>How Many Terms?</h3>
+    <p>There is not a set number of terms you need to have. It is all up to you. Personally, I would rather have too much, but again, this is for you. If you struggle with a specific topic, maybe you will have more terms for it, and if you are solid on a topic, maybe you will have fewer and they will be very condensed.</p>
+    <p>I would still recommend having terms in there even if you are solid on a section, because maybe the question that gets asked is very pointed, or all the answers could be right but one is more right than the others. You do not want to waste time on the exam looking for that one page out of six or more books because you thought you knew the information front to back.</p>
+    <p>Remember, the index does two things: it helps you find things during the exam, and it helps you explain topics and concepts in your own words, which makes you understand the topic better.</p>
+    <p>If there is a term or something that is not covered in the books in detail and you do not know it, add it to your index (this is very rare). It is better to have it in your index. For example, if a page mentions Remote Desktop Protocol (RDP) but RDP is not the main focus of that page, I would still add RDP as a term, put the info I need about it in the definition, and list the page where it was mentioned. Sometimes I even make notes in my book with more information on something if I go look it up.</p>
+
+    <h3>Book, Section, and Page Columns</h3>
+    <p>After you have done this for the whole section, fill in the book number (1), the section number and title (1 - Security Foundations), and the page number where the information is (5, 5-8, or 5, 9).</p>
+
+    <h3>Color Coding</h3>
+    <p>The template colors the index for you. In the Section column, type the section number, a dash, and the title (1 - Security Foundations), and the Term, Definition, Section, and PG columns turn the same color that section was highlighted in. Section 1 was highlighted in orange, so those columns turn orange. In the BK column, type the book number and it turns the same color as that book's tab: pink for odd books and blue for even books. If a row stays white, check that the Section starts with a number and a dash. Continue doing this for the rest of the sections in that book.</p>
+  </section>
+
+  <section class="wrap" id="quizzes">
+    <p class="eyebrow">Section 07</p>
+    <h2>Quizzes and the A-Z Index</h2>
+    <div class="rule"></div>
+    <h3>Quizzes</h3>
+    <p>Once the whole book is read, highlighted, and indexed, it is time to take the quiz for that book. This is the first trial run for my index. I try to wait a day after I finish the book to take the quiz, so the information is not super fresh and I have to rely on my index a little more than if I had just finished reading the book.</p>
+    <p>The quizzes are great because if you get a question wrong, it tells you the section and page where you can find the answer and why it is the answer. I use this to adjust my index, whether that is adding information to a definition, adding terms, or making something clearer because I could not find it quickly in the index or the book. I repeat this process until I get 100% on the quiz.</p>
+    <p>Now continue this whole process (tabs, reading and highlighting, building the index, and the quiz) for all of the textbooks.</p>
+
+    <h3>The A-Z Index</h3>
+    <p>Once all the textbooks are done, I duplicate the Section Index tab, rename the copy A-Z Index, and use the filter arrow on Term to sort it A to Z. The colors stay correct after sorting. This way, if I know the term I am looking for, I can use the A-Z index, and if I know the section, I can use the section index.</p>
+    <p>Here is the same example sorted A-Z. This is the rainbow:</p>
+    <figure class="shot"><div class="scroll"><img src="img/az_index_example.png" width="1520" height="257" loading="lazy" alt="Example A-Z index: the same terms sorted A to Z, from CIA Triad to Subnetting, with the section colors mixed"></div><figcaption>Example A-Z index, sorted by term with the section colors mixed · <a href="img/az_index_example.png" target="_blank" rel="noopener">open full size</a></figcaption></figure>
+    <p>If you add anything to your index later, add it to the section index and just redo the steps above.</p>
+  </section>
+
+  <div class="wrap">
+    <p class="jump"><strong>No CyberLive questions?</strong> <a href="#binder">Skip the workbooks and jump to printing and binder setup &rarr;</a></p>
+  </div>
+
+  <section class="wrap" id="workbooks">
+    <p class="eyebrow">Section 08</p>
+    <h2>Indexing the Workbooks (CyberLive)</h2>
+    <div class="rule"></div>
+    <p>If your exam has CyberLive questions, the process is very similar to indexing the textbooks. Everything in this section also applies to Lightning Lab books.</p>
+
+    <h3>Workbook Tabs</h3>
+    <p>First, I use a Sharpie to mark the workbooks on the front with large labels for what they are: WB1, WB2 (Workbook). For the book tabs, I use the same striped book tabs as the textbooks. The first workbook's tab goes at the top far left, behind the first cardstock page, and the second workbook's tab goes at the top far right, so both stick out of the top of the book. I label these tabs WB1 and WB2 with a Sharpie. The section tabs go on the first page of each lab (for example, Lab 1.1: Hashing Files), on the left or right side of the page just like the textbooks, so when the book is closed and facing you, the section tabs stick out on the right side.</p>
+    <p>Go through the whole workbook and add all the section tabs before writing any numbers on them. The workbooks have way more sections and tabs than the textbooks, so it is okay if you have to start over at the top of the right side again. You will end up with two rows of tabs. You will also need more room on these tabs, because you label them in the format #.#, so make sure each tab has room to write the whole number with a Sharpie without it being covered by the previous tab.</p>
+    <p>I label the workbook sections this way because if you know Book 3 talked about a specific tool, you can quickly tell that the workbook section with the lab that used it has to start with a 3.</p>
+
+    <h3>Reading and Highlighting</h3>
+    <p>From here, read the workbook and highlight it just like the textbooks, except this time I highlight any commands I will run in red.</p>
+    <p>The order you go in next is personal preference, but I like to read the whole workbook and make its index before I do the labs. Just like the textbooks, I read and highlight three labs, then add them to my index. That way, when I spin up my VMs and get everything connected, I can just plug away at the labs without having to stop, read, and come back to the VM. This is the same reason I do not do the labs as I read through the textbooks. I just personally do not like it.</p>
+
+    <h3>The Lab Index</h3>
+    <p>For each lab, my lab index has:</p>
+    <ul class="plain">
+      <li><strong>Topic:</strong> the section number and title (1.1 - Hashing Files)</li>
+      <li><strong>Tools:</strong> all the tools that were used (sha256sum, Get-FileHash). I do not put the whole command, just the tools.</li>
+      <li><strong>Description:</strong> a short description of what I did in the lab and the vague, general steps. Unlike the section index, you do not want to keep this on one line. Wrap the text here.</li>
+      <li><strong>Page (PG):</strong> the page range (1-8)</li>
+      <li><strong>Book (BK):</strong> the workbook number (1)</li>
+    </ul>
+    <p>Here is an example of what my lab index looks like:</p>
+    <figure class="shot"><div class="scroll"><img src="img/lab_index_example.png" width="1264" height="381" loading="lazy" alt="Example lab index: three labs (1.1 Hashing Files, 1.2 Reading Event Logs, 2.1 Viewing Network Traffic) with tools, a summary and numbered steps, each row in the next section color, and BK in hot pink or royal blue"></div><figcaption>Example lab index, one row per lab · <a href="img/lab_index_example.png" target="_blank" rel="noopener">open full size</a></figcaption></figure>
+    <p>I do this for every lab. The template colors each new lab row with the next section color in order, starting with orange, just like the textbooks. The BK column turns hot pink for WB1 and royal blue for WB2. These are different shades from the textbook pink and blue, so a workbook row never looks like a textbook row.</p>
+
+    <h3>Doing the Labs</h3>
+    <p>Once the whole workbook is indexed, I do all the labs and make notes in the workbook: tips, more information about what I am doing and why, alternate commands, anything that would help me do it again as smoothly as possible. I also make a note of the more complicated labs and the labs I struggled with. Once Workbook 1 is done, I do the same thing for Workbook 2.</p>
+
+    <h3>The CTF</h3>
+    <p>Once both workbooks are indexed and all the labs are done, if there is a CTF, I do it next, taking notes of what I did along the way as if I were writing a report. My thought process and commands are the two main things. I then clean up the CTF report and include it in the Additional Resources section of my binder (see <a href="#binder">Printing and Binder Setup</a>).</p>
+    <p>The CTF is great practice for all the skills you just learned in the labs. It will also help further identify any weak spots you can go back and redo.</p>
+  </section>
+
+  <section class="wrap" id="binder">
+    <p class="eyebrow">Section 09</p>
+    <h2>Printing and Binder Setup</h2>
+    <div class="rule"></div>
+
+
+    <h3>Printing</h3>
+    <p>I print all my indexes landscape, double-sided, and in color. In Excel, the template is already set up to print landscape, one page wide, with the header row on every page and only the rows you have filled in. In Google Sheets or LibreOffice Calc, set landscape and fit to width yourself when you print.</p>
+
+    <h3>Binder Order</h3>
+    <ol>
+      <li><strong>Section index:</strong> in front of the first divider.</li>
+      <li><strong>A-Z index:</strong> after the first divider.</li>
+      <li><strong>Lab index:</strong> after the A-Z divider (CyberLive exams only).</li>
+      <li><strong>Course index:</strong> if the course comes with a premade index, I print it out and put it in its own section.</li>
+      <li><strong>Additional Resources:</strong> all the course handouts that come with it (Metasploit cheat sheet, PowerShell cheat sheet, TCP/IP cheat sheet, etc.), any other cheat sheets I make or find helpful, and my CTF report.</li>
+    </ol>
+  </section>
+
+  <div class="wrap">
+    <p class="jump"><strong>CyberLive exam?</strong> <a href="#finalprep-cl">Skip ahead to final prep for CyberLive exams &rarr;</a></p>
+  </div>
+
+  <section class="wrap" id="finalprep">
+    <p class="eyebrow">Section 10</p>
+    <h2>Final Prep (Exams Without CyberLive)</h2>
+    <div class="rule"></div>
+    <p>If your exam has no CyberLive questions, you are done indexing.</p>
+
+    <h3>Retake the Quizzes</h3>
+    <p>Before the practice exams, I take all the quizzes again, making sure I get 100% on each one before moving on to the next quiz, again refining my index or doing some more studying.</p>
+
+    <h3>Practice Exams</h3>
+    <p>For this example, let's say my exam is on a Friday. I take my first practice exam on the Monday of exam week.</p>
+    <p>For the first practice exam, I do not print out my index yet. I use it on my computer, but I find things with the scroll wheel, not Ctrl+F, as if I had the physical index. This will help you get used to the layout of your index and build muscle memory. If I get a question wrong, I quickly write down the topic it was on and move on so I do not waste exam time. Once the practice exam is done, I go back and review the topics I missed, adjusting my index and adding any additional notes to my textbooks.</p>
+    <p>I keep doing this until my second practice exam on Wednesday.</p>
+    <p>For the second practice exam, I print out my indexes (section index and A-Z index; see <a href="#binder">Printing and Binder Setup</a>). I take the practice exam the same way, quickly writing down any topics I got wrong and need to circle back to, or anything I need to fix in my index.</p>
+    <p>After the practice exam, on the same day, I fix all of this. Most of these changes are small, so I just write them in the margins of my index with a pen. For bigger changes, I edit the index on the computer and reprint just that page. I also touch up any topics I am still struggling with on Wednesday.</p>
+
+    <h3>The Day Before</h3>
+    <p>On Thursday, I relax. I do not do any studying, and I try to do things I like and that are outside, because chances are you have not touched much grass while studying for this exam (I know I don't). Not studying the day before is crucial. All the information you are going to know for the exam is already in your brain. Chances are any cram studying you do will not be worth the squeeze, and you will walk into the exam worn out instead of fresh.</p>
+
+    <h3>Exam Day</h3>
+    <p>I try to schedule my exams a few hours after lunch, so I can spend the morning warming up my brain without rushing, and I get to eat lunch and not take the exam hungry. I stick to my normal routine (sleep, food, drinks, times). I do not want to eat something I have never had before and all of a sudden fighting my stomach while trying to take the exam.</p>
+    <p>About two hours before my exam time, I take all the quizzes again. These should go by pretty fast, and you should still be scoring almost 100%. If not, do not stress. The important thing is to start getting your memory jogging for the exam you are about to take. Once you have taken all the quizzes again, if you have time and want to take another one or brush up on something, do it, but this is not a frantic cram study session. It is just a refresher session.</p>
+    <p>Then go crush the exam and enjoy that new cert!</p>
+  </section>
+
+  <div class="wrap">
+    <p class="jump"><strong>No CyberLive questions?</strong> You are done prepping. <a href="#exam">Skip ahead to using your indexes on the exam &rarr;</a></p>
+  </div>
+
+  <section class="wrap" id="finalprep-cl">
+    <p class="eyebrow">Section 11</p>
+    <h2>Final Prep (CyberLive Exams)</h2>
+    <div class="rule"></div>
+    <h3>Retake the Quizzes</h3>
+    <p>Before the practice exams, I take all the quizzes again, making sure I get 100% on each one before moving on to the next quiz, again refining my index or doing some more studying.</p>
+
+    <h3>Practice Exams</h3>
+    <p>For this example, let's say my exam is on a Friday. I take my first practice exam on the Saturday before.</p>
+    <p>For the first practice exam, I do not print out my index yet. I use it on my computer, but I find things with the scroll wheel, not Ctrl+F, as if I had the physical index. This will help you get used to the layout of your index and build muscle memory. If I get a question wrong, I quickly write down the topic it was on and move on so I do not waste exam time. Once the practice exam is done, I go back and review the topics I missed, adjusting my index and adding any additional notes to my textbooks. I also work through any labs that use techniques related to the questions I got wrong or was not confident on in the practice exam.</p>
+    <p>I keep doing this until my second practice exam on Tuesday.</p>
+    <p>For the second practice exam, I print out my indexes (section index, A-Z index, and lab index; see <a href="#binder">Printing and Binder Setup</a>). I take the practice exam the same way, quickly writing down any topics I got wrong and need to circle back to, or anything I need to fix in my index.</p>
+    <p>After the practice exam, I take the rest of Tuesday and Wednesday to fix all of this. Most of these changes are small, so I just write them in the margins of my index with a pen. For bigger changes, I edit the index on the computer and reprint just that page. I also redo any labs I still feel weak in.</p>
+
+    <h3>The Day Before</h3>
+    <p>On Thursday, I relax. I do not do any studying, and I try to do things I like and that are outside, because chances are you have not touched much grass while studying for this exam (I know I don't). Not studying the day before is crucial. All the information you are going to know for the exam is already in your brain. Chances are any cram studying you do will not be worth the squeeze, and you will walk into the exam worn out instead of fresh.</p>
+
+    <h3>Exam Day</h3>
+    <p>I try to schedule my exams a few hours after lunch, so I can spend the morning warming up my brain without rushing, and I get to eat lunch and not take the exam hungry. I stick to my normal routine (sleep, food, drinks, times). I do not want to eat something I have never had before and all of a sudden fighting my stomach while trying to take the exam.</p>
+    <p>About two hours before my exam time, I take all the quizzes again. These should go by pretty fast, and you should still be scoring almost 100%. If not, do not stress. The important thing is to start getting your memory jogging for the exam you are about to take. Once you have taken all the quizzes again, if you have time and want to take another one or brush up on something, do it, but this is not a frantic cram study session. It is just a refresher session. For a CyberLive exam, this is also a good time to read through the labs or your CTF report again.</p>
+    <p>Then go crush the exam and enjoy that new cert!</p>
+  </section>
+
+  <section class="wrap" id="exam">
+    <p class="eyebrow">Section 12</p>
+    <h2>Using Your Indexes on the Exam</h2>
+    <div class="rule"></div>
+    <p>This is where all the tedious work you have done comes in handy! When I get to a question on the exam that I am not at least 80% confident on, I look it up.</p>
+
+    <h3>The Section Index</h3>
+    <p>The first thing I ask myself is: do I know the section where I can find this information? The section index should always be your go-to, because it is quicker to look through than the rainbow that is the A-Z index.</p>
+    <p>Because of how the index is laid out, your eyes will start on the left side with the term, then move left to right to the definition. If that is still not enough, you will see the book it is in, followed by the section and the page. Say it is Book 3, Section 20, pages 67-72. Grab Book 3 and look for your Section 20 tab. If the page is toward the end of Section 20, grab the Section 21 tab and work backwards. If it is toward the front, grab the Section 20 tab and work forwards. This is also where the sturdy tabs come in handy. Then flip to pages 67-72, and hopefully you have also highlighted the answer to the question you were asked.</p>
+    <p>I have found this is the most effective method, and it leaves you with no guesswork on where things are. Hopefully this helps you understand the method to the madness and all the tedious work you have put into your index.</p>
+
+    <h3>The A-Z Index</h3>
+    <p>For finding terms when you do not know which section they are in, this is where the A-Z index comes in handy. With my firewall example from earlier, hopefully your terms are easy to find and you do not have to sort through a bunch of "Windows &lt;term&gt;" entries, because that would slow you down.</p>
+
+    <h3>When You Cannot Find It</h3>
+    <p>If you cannot find where the information you are looking for is, skip the question and come back to it. You can skip a question and come back to it later, but once you answer a question and move on, there is no going back.</p>
+    <p>When you get back to the questions you skipped, it is time to look in the Additional Resources section of your binder (the Hail Mary section). If you still cannot figure it out, depending on how much time you have, either make an educated guess or keep flipping through your books and index. Just do not leave it unanswered.</p>
+
+    <h3>CyberLive Questions</h3>
+    <p>The workbooks work mostly the same way. You should have an idea of which lab you are looking for, and ideally you can already do what the question is asking, especially if you did the CTF.</p>
+    <p>When you get to the lab questions, move all your textbooks out of the way. Put them on the floor or somewhere else, because you will not need them.</p>
+    <p>If you need to use your lab index, look at the left side with the topic, and you should know exactly which lab it is. You can quickly look at the tools and description to confirm it. Because the description has a blank line between the summary and the steps, and another after the last step, all the steps performed in the lab are easy to read. Again, scan the row left to right. You will already have the section number, and since there are only two colors for the workbooks, you will see the hot pink or royal blue at the far right in the BK column. Then you can quickly thumb through your tabs to find the steps you are looking for.</p>
+    <p>But again, you should know how to do all the labs by muscle memory. If you rely on the index to do all the labs, you will probably run out of time, and the lab questions are weighted significantly more than the multiple choice questions.</p>
+  </section>
+
+  <section class="wrap" id="template">
+    <p class="eyebrow">Section 13</p>
+    <h2>The template</h2>
+    <div class="rule"></div>
+    <p>The Short Stack index template I use, with the section and book colors already set up. It opens in Excel, Google Sheets, or LibreOffice Calc, and the How to Use tab walks you through it.</p>
+    <p><a class="dl" href="Short_Stack_Index_Template.xlsx" download>Download the template (.xlsx) &darr;</a></p>
+  </section>
+
+  <section class="wrap" id="thoughts">
+    <p class="eyebrow">Section 14</p>
+    <h2>Final Thoughts</h2>
+    <div class="rule"></div>
+    <p>Since you have made it this far, thank you for taking the time to read this. It is very much appreciated! I wanted to write something for everyone struggling with the mountain of information these exams cover, and to make that daunting task feel as smooth and bite-sized as possible. I hope it helps.</p>
+    <p>If you have a way you think is better, or any improvements, please reach out to me at <a href="mailto:contact@cnm-tx.com">contact@cnm-tx.com</a>. (Please do not ask for my indexes. I will not give them out.)</p>
+    <p>Feel free to connect with me on <a href="https://www.linkedin.com/in/cartermoseman" target="_blank" rel="noopener">LinkedIn</a> as well.</p>
+  </section>
+
+</main>
+
+<footer><div class="wrap">
+  <span>The Short Stack Method · How I Index for a GIAC Exam · by Carter Moseman</span>
+  <span><a href="/">cnmoseman.github.io</a> · <a href="mailto:contact@cnm-tx.com">contact@cnm-tx.com</a></span>
+</div></footer>
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('.thumbrail a'));
+  var map={}; links.forEach(function(a){ map[a.getAttribute('href').slice(1)]=a; });
+  var secs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1));}).filter(Boolean);
+  if(!('IntersectionObserver' in window)||!secs.length) return;
+  var io=new IntersectionObserver(function(ents){
+    ents.forEach(function(e){
+      if(e.isIntersecting){ links.forEach(function(a){a.classList.remove('on');}); var a=map[e.target.id]; if(a) a.classList.add('on'); }
+    });
+  },{rootMargin:'-45% 0px -50% 0px'});
+  secs.forEach(function(s){io.observe(s);});
+})();
+
+/* page-view counter (GoatCounter, no cookies), same account as the home page and trackers; live site only */
+if (location.hostname === "cnmoseman.github.io") {
+  var gc = document.createElement("script");
+  gc.async = true; gc.src = "https://cnmoseman.github.io/htb-study-trackers/assets/js/count.js";
+  gc.dataset.goatcounter = "https://cnmoseman.goatcounter.com/count";
+  document.head.appendChild(gc);
+}
+</script>
+</body>
+</html>
