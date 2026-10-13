@@ -142,7 +142,7 @@ a:hover svg.ic.go{transform:translateX(3px)}
 a.card:hover::after{opacity:1}
 .card:focus-visible{outline:3px solid currentColor;outline-offset:-10px}
 .card .art{position:absolute;z-index:-1;pointer-events:none;right:7%;top:6%;width:min(46%,290px);color:var(--hemo-logo)}
-/* the eight cert badges, each overlapping the previous one by half, ringed in its tracker color */
+/* the nine cert badges, each overlapping the previous one by half, ringed in its tracker color */
 .badges{--b:clamp(46px,14.5vw,92px);display:flex;align-self:flex-end;margin-bottom:auto;padding-left:calc(var(--b) / 2)}
 .badges img{width:var(--b);height:var(--b);border-radius:50%;background:var(--ink);margin-left:calc(var(--b) / -2);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 70%,transparent),0 0 10px color-mix(in srgb,var(--c) 35%,transparent)}
 .card .mine{display:flex;flex-wrap:wrap;gap:6px 18px;font-variant-numeric:tabular-nums}
@@ -283,10 +283,10 @@ footer{margin-top:clamp(56px,8vw,96px);padding-block:22px 32px;border-top:1px so
         <ul class="projects">
           <li>
             <a class="card htb" href="https://cnmoseman.github.io/htb-study-trackers/" aria-labelledby="htb-h htb-cta">
-              <span class="badges" aria-hidden="true"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cjca.png" alt="" width="96" height="96" style="--c:#2f95ff"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cpts.png" alt="" width="96" height="96" style="--c:#a34ff2"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cwes.png" alt="" width="96" height="96" style="--c:#ed635e"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cdsa.png" alt="" width="96" height="96" style="--c:#00eafc"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cwee.png" alt="" width="96" height="96" style="--c:#fcc000"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cape.png" alt="" width="96" height="96" style="--c:#e436b4"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cwpe.png" alt="" width="96" height="96" style="--c:#f05a1e"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/coae.png" alt="" width="96" height="96" style="--c:#9d94ea"></span>
+              <span class="badges" aria-hidden="true"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cjca.png" alt="" width="96" height="96" style="--c:#2f95ff"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cpts.png" alt="" width="96" height="96" style="--c:#a34ff2"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cwes.png" alt="" width="96" height="96" style="--c:#ed635e"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cdsa.png" alt="" width="96" height="96" style="--c:#00eafc"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cwee.png" alt="" width="96" height="96" style="--c:#fcc000"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cape.png" alt="" width="96" height="96" style="--c:#e436b4"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cwpe.png" alt="" width="96" height="96" style="--c:#f05a1e"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/coae.png" alt="" width="96" height="96" style="--c:#9d94ea"><img src="https://cnmoseman.github.io/htb-study-trackers/assets/badges/cdep.png" alt="" width="96" height="96" style="--c:#00eafc"></span>
               <p class="mine caps" id="htb-mine" hidden></p>
               <h3 id="htb-h">HTB Study Trackers</h3>
-              <p>A day-by-day plan and a notes vault for every Hack The Box certification path: 1,980 tasks to check off, saved in your browser and usable offline.</p>
+              <p>A day-by-day plan and a notes vault for every Hack The Box certification path: 2,303 tasks to check off, saved in your browser and usable offline.</p>
               <span class="meta caps"><span id="htb-cta">Open trackers <svg class="ic go" viewBox="0 0 16 16" aria-hidden="true"><use href="#arr"/></svg></span><span class="st">Live</span></span>
             </a>
           </li>
@@ -356,7 +356,7 @@ footer{margin-top:clamp(56px,8vw,96px);padding-block:22px 32px;border-top:1px so
   (function () {
     var certs = [["CJCA", "cjca_tracker_v2", 213], ["CPTS", "cpts_tracker_v2", 444], ["CWES", "cwes_tracker_v2", 231],
                  ["CDSA", "cdsa_tracker_v2", 212], ["CWEE", "cwee_tracker_v2", 237], ["CAPE", "cape_tracker_v2", 290],
-                 ["CWPE", "cwpe_tracker_v2", 163], ["COAE", "coae_tracker_v2", 190]], mine = [];
+                 ["CWPE", "cwpe_tracker_v2", 163], ["COAE", "coae_tracker_v2", 190], ["CDEP", "cdep_tracker_v2", 323]], mine = [];
     certs.forEach(function (c) {
       var st; try { st = JSON.parse(localStorage.getItem(c[1])); } catch (e) { return; }
       if (!st || !st.done || typeof st.done !== "object") return;
